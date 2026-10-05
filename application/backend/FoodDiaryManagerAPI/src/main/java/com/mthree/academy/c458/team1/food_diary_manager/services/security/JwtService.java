@@ -1,6 +1,7 @@
 package com.mthree.academy.c458.team1.food_diary_manager.services.security;
 
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -44,7 +45,7 @@ public class JwtService {
             .subject(authentication.getName()) //The username
             .issuedAt(Date.from(currentDateTime))
             .expiration(Date.from(expirationDateTime))
-            .signWith(getSigningKey()) //Sign token with SHA-256 (HS256) algorithm
+            .signWith(getSigningKey(), Jwts.SIG.HS256) //Sign token with SHA-256 (HS256) algorithm
             .compact(); //Convert token into string.
     }
 

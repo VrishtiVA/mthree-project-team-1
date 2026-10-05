@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -38,9 +39,12 @@ public class ApplicationConfiguration {
                 "/api/auth/**"
             ).permitAll()
 
-            //Temporarily allow all requests
-            .anyRequest().permitAll()
-//            .anyRequest().authenticated()
+            //Role specific endpoints
+            //...
+
+            //Private endpoints
+//            .anyRequest().permitAll() //Temporarily allow all requests
+            .anyRequest().authenticated()
         );
 
         //JWT-based authentication, using JWT validation filter from oauth2
@@ -56,6 +60,7 @@ public class ApplicationConfiguration {
     public JwtDecoder jwtDecoder(JwtService jwtService) {
         return NimbusJwtDecoder
             .withSecretKey(jwtService.getSigningKey())
+            .macAlgorithm(MacAlgorithm.HS256)
             .build();
     }
 

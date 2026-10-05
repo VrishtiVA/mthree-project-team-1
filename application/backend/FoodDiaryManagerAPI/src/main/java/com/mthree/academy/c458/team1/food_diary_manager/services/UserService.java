@@ -17,4 +17,6 @@ public interface UserService {
     public Authentication authenticateUser(String username, String password) throws BadCredentialsException;
 
     public User getUserByUserName(String username);
+
+    public User getUserById(int userId);
 }
