@@ -1,11 +1,14 @@
 package com.mthree.academy.c458.team1.food_diary_manager.api;
 
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+@Component
 public class OpenFoodFactsAPI implements FoodAPI{
 
 	private String openFoodFactsAPIUrl = "https://world.openfoodfacts.net/api/v2/product/";
