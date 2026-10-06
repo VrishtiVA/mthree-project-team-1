@@ -23,8 +23,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
- * Useful resources:
- * -
+ * Useful resource: <a href="https://www.baeldung.com/mockito-annotations#injectmocks-annotation"></a>
  */
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
