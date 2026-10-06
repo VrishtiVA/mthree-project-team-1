@@ -90,6 +90,12 @@ public class User {
     public void setGoals(List<Goal> goals) {this.goals = goals;}
     public void setClients(List<User> clients) {this.clients = clients;}
 
+    /**
+     * Do not update the userId.
+     * This method is present only for working with no-args constructor, e.g. for testing.
+     */
+    public void setUserId(int userId) {this.userId = userId;}
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

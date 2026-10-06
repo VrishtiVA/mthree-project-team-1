@@ -39,9 +39,11 @@ public class ConsultantServiceImpl implements ConsultantService {
             throw new UserNotFoundException("Client not found");
         }
 
-        //Add if not already added - duplicates are naturally prevented from being added
-        consultant.getClients().add(client);
-        userRepository.save(consultant);
+        //Add if not already added.
+        if (!consultant.getClients().contains(client)) {
+            consultant.getClients().add(client);
+            userRepository.save(consultant);
+        }
     }
 
     @Override
