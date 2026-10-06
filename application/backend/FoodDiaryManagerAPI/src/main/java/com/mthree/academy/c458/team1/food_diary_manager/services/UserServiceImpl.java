@@ -239,7 +239,7 @@ public class UserServiceImpl implements UserService {
         }
 
         //Return authentication object
-        return new UsernamePasswordAuthenticationToken(username, password);
+        return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
     }
 
     @Override
