@@ -14,6 +14,9 @@ import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 public class ApplicationConfiguration {
@@ -30,6 +33,9 @@ public class ApplicationConfiguration {
         //Stateless authentication for REST API
         http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.csrf(AbstractHttpConfigurer::disable);
+
+        //Enable CORS from React frontend
+        http.cors(Customizer.withDefaults());
 
         //Endpoint security configuration
         http.authorizeHttpRequests(request -> request
@@ -67,6 +73,29 @@ public class ApplicationConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    /**
+     * Configuration to allow Cross Origin Resource Sharing with external React frontend.
+     * Refreshing documentation <a href="https://www.baeldung.com/spring-cors"></a>
+     */
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+
+        //Only requests front react frontend allowed.
+        corsConfiguration.addAllowedOrigin("http://localhost:3000");
+        //All different request methods allowed.
+        corsConfiguration.addAllowedMethod("*");
+        //Allow credentials to be provided in the header (e.g. auth jwt).
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.addAllowedHeader("*");
+
+        //Use this CORS configuration for all requests.
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return source;
     }
 
 }
