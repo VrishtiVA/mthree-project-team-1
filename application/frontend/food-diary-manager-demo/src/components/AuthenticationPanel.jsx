@@ -1,20 +1,60 @@
-import { apiSignIn } from "../api/authenticationApi"
+import { apiSignIn, apiSignOut, apiSignUp } from "../api/authenticationApi"
 
 export default function AuthenticationPanel() {
     
-    const signInAsClient1 = async () => {
+    const signUpAsClient = async () => {
+        await apiSignUp(
+            "exampleClient",
+            "password",
+            "client",
+            "Client Fname",
+            "Client Lname"
+        );
+    }
 
-        let response = await apiSignIn(
-            "vrishti",
+    const signUpAsConsultant = async () => {
+        await apiSignUp(
+            "exampleConsultant",
+            "password",
+            "consultant",
+            "Consultant Fname",
+            "Consultant Lname"
+        );
+    }
+
+    const signInAsClient = async () => {
+        await apiSignIn(
+            "exampleClient",
             "password"
         );
+    }
 
-        console.log("Signed in as Client 1");
+    const signInAsConsultant = async () => {
+        await apiSignIn(
+            "exampleConsultant",
+            "password"
+        );
+    }
+
+    const signOut = async () => {
+        await apiSignOut();
     }
 
     return (<>
-        <button onClick={signInAsClient1}>
-            Sign In As Client 1
+        <button onClick={signUpAsClient}>
+            Sign Up As Example Client
+        </button>
+        <button onClick={signInAsClient}>
+            Sign In As Example Client
+        </button>
+        <button onClick={signUpAsConsultant}>
+            Sign Up As Example Consultant
+        </button>
+        <button onClick={signInAsConsultant}>
+            Sign In As Example Consultant
+        </button>
+        <button onClick={signOut}>
+            Sign Out
         </button>
     </>)
 }
