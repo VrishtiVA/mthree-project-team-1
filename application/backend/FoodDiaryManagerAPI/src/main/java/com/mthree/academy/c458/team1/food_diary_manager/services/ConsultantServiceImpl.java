@@ -7,7 +7,6 @@ import com.mthree.academy.c458.team1.food_diary_manager.services.exceptions.User
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityExistsException;
 import java.util.List;
 
 @Service
@@ -28,7 +27,7 @@ public class ConsultantServiceImpl implements ConsultantService {
     }
 
     @Override
-    public void addClientToConsultant(int clientId, int consultantId) throws UserNotFoundException, EntityExistsException {
+    public void addClientToConsultant(int clientId, int consultantId) throws UserNotFoundException {
 
         //Find relevant users
         User consultant = getConsultantById(consultantId);

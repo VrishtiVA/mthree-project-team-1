@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityExistsException;
 import java.util.List;
 
 @RestController
@@ -37,15 +36,10 @@ public class ConsultantController {
         try {
             //Add client
             consultantService.addClientToConsultant(clientId, consultantId);
-
             return new ResponseEntity<Void>(HttpStatus.CREATED);
 
-        } catch (UserNotFoundException | EntityExistsException ex) {
-            return new ResponseEntity<Error>(
-                new Error(ex.getMessage()),
-                (ex instanceof UserNotFoundException ? HttpStatus.NOT_FOUND : HttpStatus.CONFLICT)
-            );
-
+        } catch (UserNotFoundException ex) {
+            return new ResponseEntity<Error>(new Error(ex.getMessage()), HttpStatus.NOT_FOUND);
         } catch (Exception ex) {
             return new ResponseEntity<Error>(Error.SOMETHING_WENT_WRONG_MESSAGE(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
