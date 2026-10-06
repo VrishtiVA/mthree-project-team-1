@@ -40,7 +40,7 @@ public class ConsultantServiceImpl implements ConsultantService {
             throw new UserNotFoundException("Client not found");
         }
 
-        //Add if not already added.
+        //Add if not already added - duplicates are naturally prevented from being added
         consultant.getClients().add(client);
         userRepository.save(consultant);
     }
@@ -71,9 +71,9 @@ public class ConsultantServiceImpl implements ConsultantService {
             throw new UserNotFoundException("Client not found");
         }
 
-        //Remove if possible, see how well this works though.
-        consultant.getClients().remove(client);
-        userRepository.save(consultant);
+        //Remove if possible.
+        boolean removed = consultant.getClients().remove(client);
+        if (removed) userRepository.save(consultant);
     }
 
 }
