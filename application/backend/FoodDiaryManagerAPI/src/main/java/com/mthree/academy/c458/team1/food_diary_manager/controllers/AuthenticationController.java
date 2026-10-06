@@ -5,6 +5,8 @@ import com.mthree.academy.c458.team1.food_diary_manager.models.users.SignInReque
 import com.mthree.academy.c458.team1.food_diary_manager.models.users.SignInResponse;
 import com.mthree.academy.c458.team1.food_diary_manager.models.users.SignUpRequest;
 import com.mthree.academy.c458.team1.food_diary_manager.services.UserService;
+import com.mthree.academy.c458.team1.food_diary_manager.services.exceptions.EntityAlreadyExistsException;
+import com.mthree.academy.c458.team1.food_diary_manager.services.exceptions.InvalidInputException;
 import com.mthree.academy.c458.team1.food_diary_manager.services.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,7 +46,7 @@ public class AuthenticationController {
             //Serve response
             return new ResponseEntity<>(new SignInResponse(user, jwt), HttpStatus.OK);
 
-        } catch (IllegalArgumentException ex) {
+        } catch (InvalidInputException ex) {
             return new ResponseEntity<Error>(new Error(ex.getMessage()), HttpStatus.BAD_REQUEST);
         } catch (BadCredentialsException ex) {
             return new ResponseEntity<Error>(new Error(ex.getMessage()), HttpStatus.UNAUTHORIZED);
@@ -68,8 +70,11 @@ public class AuthenticationController {
             //Serve Response
             return new ResponseEntity<User>(user, HttpStatus.CREATED);
 
-        } catch (IllegalArgumentException ex) {
-            return new ResponseEntity<Error>(new Error(ex.getMessage()), HttpStatus.BAD_REQUEST);
+        } catch (InvalidInputException | EntityAlreadyExistsException ex) {
+            return new ResponseEntity<Error>(
+                new Error(ex.getMessage()),
+                (ex instanceof InvalidInputException ? HttpStatus.BAD_REQUEST : HttpStatus.CONFLICT)
+            );
 
         } catch (Exception ex) {
             //Log this error in practice (we're not sure what actually went wrong).
