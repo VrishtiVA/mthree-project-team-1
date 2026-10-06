@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table (name = "Goal")
 public class Goal {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,6 +49,7 @@ public class Goal {
     public User getClient() {return client;}
 
     /* ----- Setters ----- */
+    public void setGoalId(int goalId) {this.goalId = goalId;}
     public void setGoalSubject(GoalSubject goalSubject) {this.goalSubject = goalSubject;}
     public void setStartDate(LocalDate startDate) {this.startDate = startDate;}
     public void setEndDate(LocalDate endDate) {this.endDate = endDate;}
