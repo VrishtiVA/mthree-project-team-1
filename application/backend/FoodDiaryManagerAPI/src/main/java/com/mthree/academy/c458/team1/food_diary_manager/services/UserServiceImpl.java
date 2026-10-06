@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
      * @param username The username to validate
      * @return true if username is unique, otherwise false.
      */
-    private boolean validateUsernameIsUnique(String username) {
+    public boolean validateUsernameIsUnique(String username) {
         return userRepository.findByUserName(username).isEmpty();
     }
 

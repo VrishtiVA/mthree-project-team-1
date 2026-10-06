@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class User {
@@ -89,4 +90,30 @@ public class User {
     public void setGoals(List<Goal> goals) {this.goals = goals;}
     public void setClients(List<User> clients) {this.clients = clients;}
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return userId == user.userId && Objects.equals(userName, user.userName) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && role == user.role && Objects.equals(password, user.password) && Objects.equals(diary, user.diary) && Objects.equals(goals, user.goals) && Objects.equals(clients, user.clients);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, userName, firstName, lastName, role, password, diary, goals, clients);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", role=" + role +
+                ", password='" + password + '\'' +
+                ", diary=" + diary +
+                ", goals=" + goals +
+                ", clients=" + clients +
+                '}';
+    }
 }
