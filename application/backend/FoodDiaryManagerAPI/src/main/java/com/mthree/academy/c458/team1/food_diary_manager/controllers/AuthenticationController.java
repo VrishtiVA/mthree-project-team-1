@@ -5,7 +5,6 @@ import com.mthree.academy.c458.team1.food_diary_manager.models.users.SignInReque
 import com.mthree.academy.c458.team1.food_diary_manager.models.users.SignInResponse;
 import com.mthree.academy.c458.team1.food_diary_manager.models.users.SignUpRequest;
 import com.mthree.academy.c458.team1.food_diary_manager.services.UserService;
-import com.mthree.academy.c458.team1.food_diary_manager.services.exceptions.EntityAlreadyExistsException;
 import com.mthree.academy.c458.team1.food_diary_manager.services.exceptions.InvalidInputException;
 import com.mthree.academy.c458.team1.food_diary_manager.services.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.persistence.EntityExistsException;
 
 
 @RestController
@@ -70,7 +71,7 @@ public class AuthenticationController {
             //Serve Response
             return new ResponseEntity<User>(user, HttpStatus.CREATED);
 
-        } catch (InvalidInputException | EntityAlreadyExistsException ex) {
+        } catch (InvalidInputException | EntityExistsException ex) {
             return new ResponseEntity<Error>(
                 new Error(ex.getMessage()),
                 (ex instanceof InvalidInputException ? HttpStatus.BAD_REQUEST : HttpStatus.CONFLICT)

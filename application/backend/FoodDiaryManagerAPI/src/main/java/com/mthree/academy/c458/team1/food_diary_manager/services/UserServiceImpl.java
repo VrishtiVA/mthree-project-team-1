@@ -7,7 +7,6 @@ import com.mthree.academy.c458.team1.food_diary_manager.models.User;
 import com.mthree.academy.c458.team1.food_diary_manager.models.UserRole;
 import com.mthree.academy.c458.team1.food_diary_manager.models.users.SignInRequest;
 import com.mthree.academy.c458.team1.food_diary_manager.models.users.SignUpRequest;
-import com.mthree.academy.c458.team1.food_diary_manager.services.exceptions.EntityAlreadyExistsException;
 import com.mthree.academy.c458.team1.food_diary_manager.services.exceptions.InvalidInputException;
 import com.mthree.academy.c458.team1.food_diary_manager.services.security.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import javax.persistence.EntityExistsException;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public SignUpRequest validateSignUpRequest(SignUpRequest signUpRequest) throws InvalidInputException, EntityAlreadyExistsException {
+    public SignUpRequest validateSignUpRequest(SignUpRequest signUpRequest) throws InvalidInputException, EntityExistsException {
 
         String username = signUpRequest.userName();
         String password = signUpRequest.password();
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
         role = validateUserRole(role);
 
         if (!validateUsernameIsUnique(username)) {
-            throw new EntityAlreadyExistsException("The provided username has already been taken");
+            throw new EntityExistsException("The provided username has already been taken");
         }
 
         //Return validated and sanitized imports
@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
      * @param username The username to validate
      * @return true if username is unique, otherwise false.
      */
-    private boolean validateUsernameIsUnique(String username) {
+    public boolean validateUsernameIsUnique(String username) {
         return userRepository.findByUserName(username).isEmpty();
     }
 
@@ -239,7 +239,7 @@ public class UserServiceImpl implements UserService {
         }
 
         //Return authentication object
-        return new UsernamePasswordAuthenticationToken(username, password);
+        return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
     }
 
     @Override
