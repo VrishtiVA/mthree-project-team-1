@@ -23,10 +23,10 @@ public class Goal {
     private LocalDate endDate;
 
     @Column(name = "min_target", nullable = true)
-    private double minTarget;
+    private Double minTarget;
 
     @Column(name = "max_target", nullable = true)
-    private double maxTarget;
+    private Double maxTarget;
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
@@ -44,8 +44,8 @@ public class Goal {
     public GoalSubject getGoalSubject() {return goalSubject;}
     public LocalDate getStartDate() {return startDate;}
     public LocalDate getEndDate() {return endDate;}
-    public double getMinTarget() {return minTarget;}
-    public double getMaxTarget() {return maxTarget;}
+    public Double getMinTarget() {return minTarget;}
+    public Double getMaxTarget() {return maxTarget;}
     public User getClient() {return client;}
 
     /* ----- Setters ----- */
@@ -53,8 +53,8 @@ public class Goal {
     public void setGoalSubject(GoalSubject goalSubject) {this.goalSubject = goalSubject;}
     public void setStartDate(LocalDate startDate) {this.startDate = startDate;}
     public void setEndDate(LocalDate endDate) {this.endDate = endDate;}
-    public void setMinTarget(double minTarget) {this.minTarget = minTarget;}
-    public void setMaxTarget(double maxTarget) {this.maxTarget = maxTarget;}
+    public void setMinTarget(Double minTarget) {this.minTarget = minTarget;}
+    public void setMaxTarget(Double maxTarget) {this.maxTarget = maxTarget;}
     public void setClient(User client) {this.client = client;}
 
 }

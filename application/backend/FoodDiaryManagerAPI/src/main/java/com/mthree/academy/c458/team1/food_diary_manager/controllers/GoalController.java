@@ -11,35 +11,27 @@ import com.mthree.academy.c458.team1.food_diary_manager.daos.UserRepository;
 public class GoalController {
 
     private final GoalService goalService;
-    private final UserRepository userRepository;
 
-    public GoalController(GoalService goalService, UserRepository userRepository) {
+    public GoalController(GoalService goalService) {
         this.goalService = goalService;
-        this.userRepository = userRepository;
     }
 
     @PostMapping("/{clientId}/goal")
-    public Goal createGoal(@PathVariable int clientId, @RequestBody Goal goal) {
-        User client = userRepository.findById(clientId).orElseThrow();
-        goal.setClient(client);
-
-        return goalService.createGoal(goal);
+    public Goal createGoal(@PathVariable int clientId,
+                           @RequestBody Goal goal) {
+        return goalService.createGoal(clientId, goal);
     }
 
     @PutMapping("/{clientId}/goal/{goalId}")
     public Goal updateGoal(@PathVariable int clientId,
                            @PathVariable int goalId,
                            @RequestBody Goal goal) {
-
-        User client = userRepository.findById(clientId).orElseThrow();
-        goal.setGoalId(goalId);
-        goal.setClient(client);
-
-        return goalService.updateGoal(goal);
+        return goalService.updateGoal(clientId, goalId, goal);
     }
+
     @DeleteMapping("/{clientId}/goal/{goalId}")
     public void deleteGoal(@PathVariable int clientId,
                            @PathVariable int goalId) {
-        goalService.deleteGoal(goalId);
+        goalService.deleteGoal(clientId, goalId);
     }
 }
