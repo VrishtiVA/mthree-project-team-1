@@ -1,15 +1,22 @@
+import { useState } from 'react';
 import './App.css';
 import AuthenticationPanel from './components/AuthenticationPanel';
-import BarcodeScanner from './components/BarcodeScanner';
+import AddFoodsWidget from './components/AddFoodsWidget';
 
 function App() {
+
   return (
     <div className="App">
+      {/* App Header */}
 
       <AuthenticationPanel />
 
-      <BarcodeScanner />
+      <AddFoodsWidget />
       
+      {/* <GoalsWidget />
+
+      <DiaryWidget /> */}
+
     </div>
   );
 }
