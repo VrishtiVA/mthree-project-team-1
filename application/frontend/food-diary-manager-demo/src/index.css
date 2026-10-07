@@ -11,3 +11,32 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* ----- Bootstrap Overrides ----- */
+
+
+:root {
+    --bs-primary: rgb(248, 155, 24);
+    --bs-primary-rgb: 248, 155, 24;
+    --bs-border-color: rgb(234, 231, 229);
+
+    --bs-body-font-family: "Jost", sans-serif;
+    --bs-heading-font-family: "Jost", sans-serif;
+}
+
+.btn-primary {
+    --bs-btn-bg: rgb(248, 155, 24);
+    --bs-btn-border-color: rgb(248, 155, 24);
+    --bs-btn-hover-bg: rgb(219, 136, 21);
+    --bs-btn-hover-border-color: rgb(219, 136, 21);
+    --bs-btn-active-bg: rgb(200, 125, 21);
+    --bs-btn-active-border-color: rgb(200, 125, 21);
+    --bs-btn-disabled-bg: rgb(175, 169, 160);
+    --bs-btn-disabled-border-color: rgb(175, 169, 160);
+}
+
+body {
+  height: 100vh;
+  margin-bottom: 96px;
+  background-image: linear-gradient(#fefbf8 10%, #ffffff);
+}

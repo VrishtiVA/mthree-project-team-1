@@ -1,4 +1,6 @@
 
+/* ----- Scanner Styling ----- */
+
 #scannerContainer {
     position: fixed;
     z-index: 10;
@@ -20,4 +22,14 @@
     justify-self: center;
     z-index: 11;
     margin-block: 52px;
+}
+
+/* ----- App Styling ----- */
+
+.container-slim {
+    margin-inline: 15%;
+}
+
+.card-body {
+    padding: 16px;
 }

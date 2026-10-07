@@ -62,6 +62,7 @@ export default function BarcodeScanner({setBarcode}) {
      */
     function onScanSuccess(decodedText, decodedResult) {
         console.log("Detected Barcode:", decodedText);
+        setBarcode(decodedText);
         stopScanner();
     }
 
@@ -80,16 +81,14 @@ export default function BarcodeScanner({setBarcode}) {
 
     return (<>
 
-        {(!showScanner) && 
-            <button onClick={startScanner}>
-                Scan Barcode
-            </button>
-        }
+        <button onClick={startScanner} type="button" disabled={showScanner} className="btn btn-primary">
+            <i class="bi bi-upc-scan"></i>
+        </button>
 
         <div id="scannerContainer" style={{
             display: showScanner ? "block" : "none"
         }}>
-            <button id="stopScanner" onClick={stopScanner}>
+            <button id="stopScanner" onClick={stopScanner} type="button" className="btn btn-dark">
                 Stop Scanning
             </button>
 

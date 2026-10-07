@@ -40,21 +40,25 @@ export default function AuthenticationPanel() {
         await apiSignOut();
     }
 
-    return (<>
-        <button onClick={signUpAsClient}>
-            Sign Up As Example Client
-        </button>
-        <button onClick={signInAsClient}>
-            Sign In As Example Client
-        </button>
-        <button onClick={signUpAsConsultant}>
-            Sign Up As Example Consultant
-        </button>
-        <button onClick={signInAsConsultant}>
-            Sign In As Example Consultant
-        </button>
-        <button onClick={signOut}>
-            Sign Out
-        </button>
-    </>)
+    return (
+        <div className="card">
+            <div className="card-body d-flex gap-1 flex-wrap items-center">
+                <button onClick={signUpAsClient} className="btn btn-primary btn-sm">
+                    Sign Up As Example Client
+                </button>
+                <button onClick={signInAsClient} className="btn btn-primary btn-sm">
+                    Sign In As Example Client
+                </button>
+                <button onClick={signUpAsConsultant} className="btn btn-primary btn-sm">
+                    Sign Up As Example Consultant
+                </button>
+                <button onClick={signInAsConsultant} className="btn btn-primary btn-sm">
+                    Sign In As Example Consultant
+                </button>
+                <button onClick={signOut} className="btn btn-primary btn-sm">
+                    Sign Out
+                </button>
+            </div>
+        </div>
+    )
 }
