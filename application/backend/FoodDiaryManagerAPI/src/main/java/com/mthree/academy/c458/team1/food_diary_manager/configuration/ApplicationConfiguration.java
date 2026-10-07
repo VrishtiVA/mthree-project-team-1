@@ -1,5 +1,6 @@
 package com.mthree.academy.c458.team1.food_diary_manager.configuration;
 
+import com.mthree.academy.c458.team1.food_diary_manager.models.UserRole;
 import com.mthree.academy.c458.team1.food_diary_manager.services.security.JwtService;
 import com.mthree.academy.c458.team1.food_diary_manager.services.security.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
@@ -13,11 +14,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+/**
+ * @implNote Refreshing Documentation <a href="https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html"></a>
+ */
 @Configuration
 public class ApplicationConfiguration {
 
@@ -46,15 +52,19 @@ public class ApplicationConfiguration {
             ).permitAll()
 
             //Role specific endpoints
-            //...
+            .antMatchers(
+                "/api/consultant/*/client/**"
+            ).hasAuthority(UserRole.CONSULTANT.name())
 
             //Private endpoints
-//            .anyRequest().permitAll() //Temporarily allow all requests
+//            .anyRequest().permitAll() //Temporarily allow all requests - remove this comment later.
             .anyRequest().authenticated()
         );
 
         //JWT-based authentication, using JWT validation filter from oauth2
-        http.oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
+        http.oauth2ResourceServer(oauth2 -> oauth2
+            .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+        );
 
         //Use custom user details service implementation for authentication
         http.userDetailsService(userDetailsService);
@@ -71,13 +81,23 @@ public class ApplicationConfiguration {
     }
 
     @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("role");
+        grantedAuthoritiesConverter.setAuthorityPrefix("");
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        return jwtAuthenticationConverter;
+    }
+
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     /**
      * Configuration to allow Cross Origin Resource Sharing with external React frontend.
-     * Refreshing documentation <a href="https://www.baeldung.com/spring-cors"></a>
+     * @implNote Refreshing documentation <a href="https://www.baeldung.com/spring-cors"></a>
      */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
