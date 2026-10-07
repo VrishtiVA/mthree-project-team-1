@@ -1,6 +1,7 @@
 package com.mthree.academy.c458.team1.food_diary_manager.api;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mthree.academy.c458.team1.food_diary_manager.exceptions.APIException;
@@ -20,11 +21,12 @@ public class OpenFoodFactsAPI implements FoodAPI {
 	private final String openFoodFactsAPIUrl = "https://world.openfoodfacts.net/api/v2/product/";
 
 	@Override
-	public Food searchFoodByBarcode(String barcode) throws FoodNotFoundException {
+	public Food searchFoodByBarcode(String barcode)
+			throws FoodNotFoundException, APIException {
 
 		String api = "https://world.openfoodfacts.org/api/v2/product/"
 				+ barcode
-				+ "?fields=product_name,code,nutriscore_data";
+				+ "?fields=product_name,code,nutriscore_data,nutriments";
 
 		HttpClient client = HttpClient.newHttpClient();
 
@@ -38,7 +40,21 @@ public class OpenFoodFactsAPI implements FoodAPI {
 					client.send(request, HttpResponse.BodyHandlers.ofString());
 
 			String responseBody = response.body();
-			System.out.println(responseBody);
+
+			// Check HTTP response status
+			if (response.statusCode() != 200) {
+
+				if (response.statusCode() == 404) {
+					throw new FoodNotFoundException(
+							"Food not found for barcode: " + barcode
+					);
+				}
+
+				throw new APIException(
+						"API request failed with status code: "
+								+ response.statusCode()
+				);
+			}
 
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode root = objectMapper.readTree(responseBody);
@@ -50,48 +66,109 @@ public class OpenFoodFactsAPI implements FoodAPI {
 				);
 			}
 
-			// Get barcode
-			long id_number = 0L;
-			String id = root.get("code").asText();
-
-			try {
-				id_number = Long.parseLong(id);
-			} catch (NumberFormatException e) {
-				System.out.println("Invalid barcode: " + id);
-			}
+			JsonNode product = root.path("product");
 
 			// Get product name
-			String productName = root
-					.get("product")
-					.get("product_name")
+			String productName = product
+					.path("product_name")
 					.asText();
 
-			double salt = 0;
+			// Get nutritional information
+			JsonNode nutriments = product.path("nutriments");
+			double calories = nutriments
+					.path("energy-kcal_prepared_100g")
+					.asDouble(0);
 
-			// Get salt information if it exists
-			JsonNode negative = root
-					.get("product")
-					.path("nutriscore_data")
-					.path("components")
-					.path("negative");
-
-			if (negative.isArray()) {
-				for (JsonNode nutrient : negative) {
-
-					if ("salt".equals(nutrient.path("id").asText())) {
-						salt = nutrient.path("value").asDouble();
-					}
-				}
+			if (calories == 0.0) {
+				calories = nutriments
+						.path("energy-kcal_100g")
+						.asDouble(0);
 			}
+
+			double protein = nutriments
+					.path("proteins_prepared_100g")
+					.asDouble(0);
+
+			if (protein == 0.0) {
+				protein = nutriments
+						.path("proteins_100g")
+						.asDouble(0);
+			}
+
+			double fat = nutriments
+					.path("fat_prepared_100g")
+					.asDouble(0);
+
+			if (fat == 0.0) {
+				fat = nutriments
+						.path("fat_100g")
+						.asDouble(0);
+			}
+
+			double carbohydrates = nutriments
+					.path("carbohydrates_prepared_100g")
+					.asDouble(0);
+
+			if (carbohydrates == 0.0) {
+				carbohydrates = nutriments
+						.path("carbohydrates_100g")
+						.asDouble(0);
+			}
+
+			double sugars = nutriments
+					.path("sugars_prepared_100g")
+					.asDouble(0);
+
+			if (sugars == 0.0) {
+				sugars = nutriments
+						.path("sugars_100g")
+						.asDouble(0);
+			}
+
+			double fibre = nutriments
+					.path("fiber_prepared_100g")
+					.asDouble(0);
+
+			if (fibre == 0.0) {
+				fibre = nutriments
+						.path("fiber_100g")
+						.asDouble(0);
+			}
+
+			double salt = nutriments
+					.path("salt_prepared_100g")
+					.asDouble(0);
+
+			if (salt == 0.0) {
+				salt = nutriments
+						.path("salt_100g")
+						.asDouble(0);
+			}
+			// Create Food object
 			Food food = new Food();
+
 			food.setBarcode(barcode);
 			food.setName(productName);
+
+			food.setCalories(calories);
+			food.setProtein(protein);
+			food.setFat(fat);
+			food.setCarbohydrates(carbohydrates);
+			food.setSugars(sugars);
+			food.setFibre(fibre);
 			food.setSalt(salt);
+
 			return food;
 
-		} catch (IOException | InterruptedException e) {
-			e.printStackTrace();
-			return null;
+		} catch (JsonProcessingException e) {
+			throw new APIException("Could not parse API response");
+
+		} catch (IOException e) {
+			throw new APIException("Could not communicate with API");
+
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw new APIException("API request was interrupted");
 		}
 	}
 
@@ -117,6 +194,9 @@ public class OpenFoodFactsAPI implements FoodAPI {
 					client.send(request, HttpResponse.BodyHandlers.ofString());
 
 			ObjectMapper objectMapper = new ObjectMapper();
+			if (response.statusCode() != 200) {
+				throw new APIException("API is unavailable");
+			}
 
 			JsonNode root = objectMapper.readTree(response.body());
 			JsonNode products = root.get("products");
@@ -125,6 +205,9 @@ public class OpenFoodFactsAPI implements FoodAPI {
 			}
 
 			for (JsonNode product : products) {
+				if (product.size()!=2) {
+					continue;
+				}
 
 				String productName = product.get("product_name").asText();
 				String barcode = product.get("code").asText();

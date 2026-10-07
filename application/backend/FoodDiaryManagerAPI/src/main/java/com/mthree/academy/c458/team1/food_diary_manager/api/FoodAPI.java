@@ -7,7 +7,7 @@ import com.mthree.academy.c458.team1.food_diary_manager.models.Food;
 
 public interface FoodAPI {
 
-	Food searchFoodByBarcode(String barcode) throws FoodNotFoundException;
+	Food searchFoodByBarcode(String barcode) throws FoodNotFoundException, APIException;
 
 	String getBarcodeUsingName(String barcode) throws FoodNotFoundException, JsonParseException, APIException;
 }

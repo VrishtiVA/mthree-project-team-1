@@ -5,9 +5,13 @@ import com.mthree.academy.c458.team1.food_diary_manager.api.OpenFoodFactsAPI;
 import com.mthree.academy.c458.team1.food_diary_manager.daos.FoodRepository;
 import com.mthree.academy.c458.team1.food_diary_manager.exceptions.APIException;
 import com.mthree.academy.c458.team1.food_diary_manager.exceptions.FoodNotFoundException;
+import com.mthree.academy.c458.team1.food_diary_manager.models.Diary;
 import com.mthree.academy.c458.team1.food_diary_manager.models.Food;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Service
 public class FoodApiServiceImpl implements FoodApiService {
@@ -19,7 +23,7 @@ public class FoodApiServiceImpl implements FoodApiService {
 	FoodRepository foodRepository;
 
 
-	public Food searchFoodByBarcode(String barcode) {
+	public Food searchFoodByBarcode(String barcode) throws APIException {
 
 		Food food = foodRepository.findByBarcode(barcode);
 		if (food == null) {
@@ -30,12 +34,12 @@ public class FoodApiServiceImpl implements FoodApiService {
 				System.out.println(e.getMessage());
 				return null;
 			}
-			System.out.println("Saving to repository");
+			System.out.println("Saving Food to repository");
 			foodRepository.save(food);
 			return food;
 		}
 
-		System.out.println("Found in repository, no need to call API");
+		System.out.println("Found food in repository using barcode, no need to call API");
 		return food;
 	}
 
@@ -46,12 +50,35 @@ public class FoodApiServiceImpl implements FoodApiService {
 
 		if (food == null) {
 			String str = openFoodFactsAPI.getBarcodeUsingName(name);
-			System.out.println("Saving to repository");
+			System.out.println("Saving Food to repository");
 			return str;
+		} else {
+			System.out.println("Found food in repository using name, no need to call API");
+			return food.getBarcode();
 		}
 
-		System.out.println("Found in repository, no need to call API");
-		return null;
+	}
+
+		public Diary calculateFields(Food food, int amount, LocalTime time, LocalDate date) {
+
+			double multiplier = amount / 100.0;
+
+			Diary diary = new Diary();
+
+			diary.setAmount(amount);
+			diary.setTime(time);
+			diary.setDate(date);
+
+			diary.setCalories(food.getCalories() * multiplier);
+			diary.setProtein(food.getProtein() * multiplier);
+			diary.setFat(food.getFat() * multiplier);
+			diary.setCarbohydrates(food.getCarbohydrates() * multiplier);
+			diary.setSugars(food.getSugars() * multiplier);
+			diary.setFibre(food.getFibre() * multiplier);
+			diary.setSalt(food.getSalt() * multiplier);
+//			diary.setName(food.getName());
+
+			return diary;
 	}
 
 }
