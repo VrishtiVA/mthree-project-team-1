@@ -89,10 +89,11 @@ export default function BarcodeScanner({setBarcode}) {
         <div id="scannerContainer" style={{
             display: showScanner ? "block" : "none"
         }}>
-            <div id="reader" width="600px"></div>
-            <button onClick={stopScanner}>
+            <button id="stopScanner" onClick={stopScanner}>
                 Stop Scanning
             </button>
+
+            <div id="reader" width="600px"></div>
         </div>
     </>);
 }
