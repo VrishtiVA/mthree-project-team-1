@@ -49,8 +49,8 @@ public class ApplicationConfiguration {
             //...
 
             //Private endpoints
-//            .anyRequest().permitAll() //Temporarily allow all requests
-            .anyRequest().authenticated()
+            .anyRequest().permitAll() //Temporarily allow all requests
+//            .anyRequest().authenticated()
         );
 
         //JWT-based authentication, using JWT validation filter from oauth2

@@ -5,7 +5,10 @@ import com.mthree.academy.c458.team1.food_diary_manager.models.Goal;
 import com.mthree.academy.c458.team1.food_diary_manager.models.User;
 import com.mthree.academy.c458.team1.food_diary_manager.models.UserRole;
 import com.mthree.academy.c458.team1.food_diary_manager.services.exceptions.InvalidInputException;
+import com.mthree.academy.c458.team1.food_diary_manager.services.exceptions.UserNotFoundException;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityNotFoundException;
 
 @Service
 public class GoalServiceImpl implements GoalService {
@@ -18,16 +21,15 @@ public class GoalServiceImpl implements GoalService {
         this.userService = userService;
     }
 
-    @Override
-    public Goal createGoal(int clientId, Goal goal) {
+    private Goal validateGoal(Goal goal) throws InvalidInputException {
 
         if (goal.getGoalSubject() == null) {
             throw new InvalidInputException("Goal subject is required");
         }
+
         if (goal.getMinTarget() != null && goal.getMinTarget() < 0) {
             throw new InvalidInputException("Minimum target cannot be negative");
         }
-
         if (goal.getMaxTarget() != null && goal.getMaxTarget() < 0) {
             throw new InvalidInputException("Maximum target cannot be negative");
         }
@@ -38,6 +40,7 @@ public class GoalServiceImpl implements GoalService {
                     "Minimum target cannot be greater than maximum target"
             );
         }
+
         if (goal.getStartDate() != null && goal.getEndDate() != null
                 && goal.getEndDate().isBefore(goal.getStartDate())) {
             throw new InvalidInputException(
@@ -45,6 +48,16 @@ public class GoalServiceImpl implements GoalService {
             );
         }
 
+        return goal;
+    }
+
+    @Override
+    public Goal createGoal(int clientId, Goal goal) throws UserNotFoundException, InvalidInputException {
+
+        //Validate goal
+        validateGoal(goal);
+
+        //Validate client
         User client = userService.getUserById(clientId);
 
         if (client == null) {
@@ -55,6 +68,7 @@ public class GoalServiceImpl implements GoalService {
             throw new InvalidInputException("User is not a client");
         }
 
+        //Add goal
         goal.setClient(client);
         client.getGoals().add(goal);
 
@@ -62,41 +76,21 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
-    public Goal updateGoal(int clientId, int goalId, Goal goal) {
+    public Goal updateGoal(int clientId, int goalId, Goal goal) throws EntityNotFoundException, InvalidInputException {
 
+        //Find goal
         Goal existingGoal = goalRepository.findById(goalId).orElse(null);
 
+        //Validate goal
         if (existingGoal == null) {
-            throw new InvalidInputException("Goal not found");
+            throw new EntityNotFoundException("Goal not found");
         }
         if (existingGoal.getClient().getUserId() != clientId) {
             throw new InvalidInputException("Goal does not belong to this client");
         }
-        if (goal.getMinTarget() != null && goal.getMinTarget() < 0) {
-            throw new InvalidInputException("Minimum target cannot be negative");
-        }
+        validateGoal(goal);
 
-        if (goal.getMaxTarget() != null && goal.getMaxTarget() < 0) {
-            throw new InvalidInputException("Maximum target cannot be negative");
-        }
-
-        if (goal.getGoalSubject() == null) {
-            throw new InvalidInputException("Goal subject is required");
-        }
-
-        if (goal.getMinTarget() != null && goal.getMaxTarget() != null
-                && goal.getMinTarget() > goal.getMaxTarget()) {
-            throw new InvalidInputException(
-                    "Minimum target cannot be greater than maximum target"
-            );
-        }
-        if (goal.getStartDate() != null && goal.getEndDate() != null
-                && goal.getEndDate().isBefore(goal.getStartDate())) {
-            throw new InvalidInputException(
-                    "End date cannot be before start date"
-            );
-        }
-
+        //Update
         existingGoal.setGoalSubject(goal.getGoalSubject());
         existingGoal.setStartDate(goal.getStartDate());
         existingGoal.setEndDate(goal.getEndDate());
@@ -107,12 +101,12 @@ public class GoalServiceImpl implements GoalService {
     }
 
         @Override
-        public void deleteGoal(int clientId, int goalId) {
+        public void deleteGoal(int clientId, int goalId) throws EntityNotFoundException {
 
             Goal existingGoal = goalRepository.findById(goalId).orElse(null);
 
             if (existingGoal == null) {
-                throw new InvalidInputException("Goal not found");
+                throw new EntityNotFoundException("Goal not found");
             }
 
             if (existingGoal.getClient().getUserId() != clientId) {

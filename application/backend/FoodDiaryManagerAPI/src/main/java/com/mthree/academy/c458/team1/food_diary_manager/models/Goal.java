@@ -1,5 +1,7 @@
 package com.mthree.academy.c458.team1.food_diary_manager.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -28,6 +30,7 @@ public class Goal {
     @Column(name = "max_target", nullable = true)
     private Double maxTarget;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private User client;
