@@ -1,8 +1,11 @@
 package com.mthree.academy.c458.team1.food_diary_manager.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class User {
@@ -12,7 +15,7 @@ public class User {
     @Column(name = "user_id", nullable = false)
     private int userId;
 
-    @Column(name = "user_name", nullable = false)
+    @Column(name = "user_name", nullable = false, unique = true)
     private String userName;
 
     @Column(name = "first_name", nullable = false)
@@ -25,22 +28,34 @@ public class User {
     @Column(name = "role", nullable = false)
     private UserRole role;
 
+    /**
+     * JsonIgnore: Password should not be included in responses
+     */
+    @JsonIgnore
     @Column(name = "password")
     private String password;
 
     /**
      * Orphan removal: indicating unowned diaries should be disposed of if a client is deleted.
      * Optional: A user may even not have a diary e.g. if they are a consultant.
+     * JsonIgnore: Not to be included in JSON responses.
      */
+    @JsonIgnore
     @OneToOne(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private Diary diary;
 
     /**
      * Orphan removal: indicating unowned goals should be disposed of if a client is deleted.
+     * JsonIgnore: Not to be included in JSON responses.
      */
+    @JsonIgnore
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Goal> goals = new ArrayList<>();
 
+    /**
+     * JsonIgnore: Not to be included in JSON responses.
+     */
+    @JsonIgnore
     @OneToMany
     @JoinColumn(name = "consultant_id", nullable = true)
     private List<User> clients = new ArrayList<>();
@@ -75,4 +90,36 @@ public class User {
     public void setGoals(List<Goal> goals) {this.goals = goals;}
     public void setClients(List<User> clients) {this.clients = clients;}
 
+    /**
+     * Do not update the userId.
+     * This method is present only for working with no-args constructor, e.g. for testing.
+     */
+    public void setUserId(int userId) {this.userId = userId;}
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return userId == user.userId && Objects.equals(userName, user.userName) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && role == user.role && Objects.equals(password, user.password) && Objects.equals(diary, user.diary) && Objects.equals(goals, user.goals) && Objects.equals(clients, user.clients);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, userName, firstName, lastName, role, password, diary, goals, clients);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", role=" + role +
+                ", password='" + password + '\'' +
+                ", diary=" + diary +
+                ", goals=" + goals +
+                ", clients=" + clients +
+                '}';
+    }
 }
