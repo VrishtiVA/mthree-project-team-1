@@ -82,7 +82,7 @@ export default function BarcodeScanner({setBarcode}) {
     return (<>
 
         <button onClick={startScanner} type="button" disabled={showScanner} className="btn btn-primary">
-            <i class="bi bi-upc-scan"></i>
+            <i className="bi bi-upc-scan"></i>
         </button>
 
         <div id="scannerContainer" style={{

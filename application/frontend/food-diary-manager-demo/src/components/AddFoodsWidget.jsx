@@ -1,6 +1,6 @@
 import { useState } from "react";
 import BarcodeScanner from "./BarcodeScanner";
-import { apiAddToDiaryByBarcode, apiFindFoodByBarcode, apiFindFoodByName } from "../api/foodDiaryApi";
+import { apiAddToDiaryByBarcode, apiDeleteDiaryEntry, apiFindFoodByBarcode, apiFindFoodByName, apiUpdateDiaryEntry } from "../api/foodDiaryApi";
 
 export default function AddFoodsWidget({showNotification}) {
 
@@ -8,7 +8,9 @@ export default function AddFoodsWidget({showNotification}) {
     const [lookupValue, setLookupValue] = useState("");
     const [foodItem, setFoodItem] = useState(null);
     const [amountValue, setAmountValue] = useState(null);
-    const [dateTimeValue, setDateTimeValue] = useState(null);
+    const [dateTimeValue, setDateTimeValue] = useState("");
+    const [diaryMode, setDiaryMode] = useState("addEntry");
+    const [entryIdValue, setEntryIdValue] = useState(null);
 
     const goLookupItem = async () => {
         try {
@@ -37,24 +39,49 @@ export default function AddFoodsWidget({showNotification}) {
             
             let datetime = dateTimeValue?.split("T") || null;
             if (!datetime) return;
-
             let time = datetime[1] + ":00";
             let date = datetime[0];
             
-            //Try fetch food item
             response = await apiAddToDiaryByBarcode(lookupValue, amountValue, time, date);
             
             //Set if got a successful response
             if (response) {
                 setFoodItem(response); 
                 showNotification("Successfully added food to diary", "success");
-            } else {
-                throw Error();
-            }
+            } else throw Error();
 
         } catch (error) {
             setFoodItem(null);
         }
+    }
+
+    const updateDiaryEntry = async () => {
+        try {
+            let response = null;
+            
+            let datetime = dateTimeValue?.split("T") || null;
+            if (!datetime) return;
+            let time = datetime[1] + ":00";
+            let date = datetime[0];
+            
+            response = await apiUpdateDiaryEntry(entryIdValue, lookupValue, amountValue, time, date);
+            
+            //Set if got a successful response
+            if (response) {
+                showNotification("Successfully updated diary entry", "success");
+            } else throw Error();
+
+        } catch (error) {}
+    }
+
+    const deleteDiaryEntry = async () => {
+        try {
+            await apiDeleteDiaryEntry(entryIdValue);
+            
+            //Set if got a successful response
+            showNotification("Successfully deleted diary entry", "success");
+
+        } catch (error) {}
     }
 
     return (<>
@@ -65,6 +92,13 @@ export default function AddFoodsWidget({showNotification}) {
                 <div className="card col-md">
                     <div className="card-body py-4 d-flex flex-column gap-2">
                         
+                        <div>
+                            <select className="form-select" defaultValue={"barcode"} onChange={(e) => setLookupMode(e.target.value)}>
+                                <option value="barcode"> By Barcode </option>
+                                <option value="name"> By Search </option>
+                            </select>
+                        </div>
+
                         <div className="input-group rounded-2 overflow-hidden">
                             <input 
                                 className="form-control" 
@@ -77,23 +111,6 @@ export default function AddFoodsWidget({showNotification}) {
                             />}
                         </div>
 
-                        <div>
-                            <select className="form-select" onChange={(e) => setLookupMode(e.target.value)}>
-                                <option 
-                                    value="barcode" 
-                                    selected={lookupMode === "barcode"}
-                                >
-                                    By Barcode
-                                </option>
-                                <option 
-                                    value="name"
-                                    selected={lookupMode === "name"}
-                                >
-                                    By Search
-                                </option>
-                            </select>
-                        </div>
-
                         <button className="btn btn-success" onClick={goLookupItem}>
                             Lookup
                         </button>
@@ -101,29 +118,61 @@ export default function AddFoodsWidget({showNotification}) {
                         {lookupMode === "barcode" && <>
                             <hr className="my-1"/>
 
-                            <div className="input-group rounded-2 overflow-hidden">
-                                <input 
-                                    className="form-control" 
-                                    placeholder="Enter amount in grams"
-                                    type="number"
-                                    value={amountValue}
-                                    onInput={(e) => setAmountValue(e.target.value)}
-                                />
+                            <div className="input-group">
+                                <select className="form-select" defaultValue={"getEntries"} onChange={(e) => setDiaryMode(e.target.value)}>
+                                    <option value="addEntry"> Add Entry </option>
+                                    <option value="updateEntry"> Update Entry </option>
+                                    <option value="deleteEntry"> Delete Entry </option>
+                                </select>
+
+                                {diaryMode !== "addEntry" && 
+                                    <input 
+                                        className="form-control" 
+                                        placeholder="Enter Entry ID"
+                                        type="number"
+                                        value={entryIdValue}
+                                        onInput={(e) => setEntryIdValue(e.target.value)}
+                                    />
+                                }
                             </div>
 
-                            <div className="input-group rounded-2 overflow-hidden">
-                                <input 
-                                    className="form-control" 
-                                    placeholder="Enter date and time"
-                                    type="datetime-local"
-                                    value={dateTimeValue}
-                                    onInput={(e) => setDateTimeValue(e.target.value)}
-                                />
-                            </div>
+                            {diaryMode !== "deleteEntry" && <>
+                                <div className="input-group">
+                                    <input 
+                                        className="form-control" 
+                                        placeholder="Enter amount in grams"
+                                        type="number"
+                                        value={amountValue}
+                                        onInput={(e) => setAmountValue(e.target.value)}
+                                    />
+                                </div>
 
-                            <button className="btn btn-success" onClick={addToDiaryByBarcode}>
-                                Add to Diary
-                            </button>
+                                <div className="input-group">
+                                    <input 
+                                        className="form-control" 
+                                        placeholder="Enter date and time"
+                                        type="datetime-local"
+                                        value={dateTimeValue}
+                                        onInput={(e) => setDateTimeValue(e.target.value)}
+                                    />
+                                </div>
+                            </>}
+
+                            {diaryMode === "addEntry" &&
+                                <button className="btn btn-success" onClick={addToDiaryByBarcode}>
+                                    Add to Diary
+                                </button>
+                            }
+                            {diaryMode === "updateEntry" &&
+                                <button className="btn btn-success" onClick={updateDiaryEntry}>
+                                    Update Diary Entry
+                                </button>
+                            }
+                            {diaryMode === "deleteEntry" &&
+                                <button className="btn btn-danger" onClick={deleteDiaryEntry}>
+                                    Delete Diary Entry
+                                </button>
+                            }
                         </>}
                     </div>
                 </div>
@@ -133,6 +182,7 @@ export default function AddFoodsWidget({showNotification}) {
                         <div className="card-body py-4">
                             <ul className="list-group">
                                 <li className="list-group-item">Name: {foodItem.name}</li>
+                                <li className="list-group-item">Barcode: {foodItem.barcode || "N/A"}</li>
                                 <li className="list-group-item">Calories: {foodItem.calories}kcal</li>
                                 <li className="list-group-item">Carboyhrates: {foodItem.carbohydrates}g</li>
                                 <li className="list-group-item">Fat: {foodItem.fat}g</li>
