@@ -14,7 +14,7 @@ export default function AddFoodsWidget() {
             let response = null;
             
             //Try fetch food item
-            if (lookupMode == "barcode") {
+            if (lookupMode === "barcode") {
                 response = await apiFindFoodByBarcode(lookupValue);
             } else {
                 response = await apiFindFoodByName(lookupValue);
@@ -43,11 +43,11 @@ export default function AddFoodsWidget() {
                         <div className="input-group rounded-2 overflow-hidden">
                             <input 
                                 className="form-control" 
-                                placeholder={lookupMode == "barcode" ? "Scan or Enter Barcode..." : "Enter Food Name"}
+                                placeholder={lookupMode === "barcode" ? "Scan or Enter Barcode ..." : "Enter Food Name ..."}
                                 value={lookupValue}
                                 onInput={(e) => setLookupValue(e.target.value)}
                             />
-                            {lookupMode == "barcode" && <BarcodeScanner 
+                            {lookupMode === "barcode" && <BarcodeScanner 
                                 setBarcode={setLookupValue}
                             />}
                         </div>
@@ -56,13 +56,13 @@ export default function AddFoodsWidget() {
                             <select className="form-select" onChange={(e) => setLookupMode(e.target.value)}>
                                 <option 
                                     value="barcode" 
-                                    selected={lookupMode == "barcode"}
+                                    selected={lookupMode === "barcode"}
                                 >
                                     By Barcode
                                 </option>
                                 <option 
                                     value="name"
-                                    selected={lookupMode == "name"}
+                                    selected={lookupMode === "name"}
                                 >
                                     By Search
                                 </option>

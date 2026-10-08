@@ -30,6 +30,10 @@
     margin-inline: 15%;
 }
 
-.card-body {
-    padding: 16px;
+card {
+    border-radius: 200px;
 }
+
+/* .card-body {
+    padding: 16px;
+} */

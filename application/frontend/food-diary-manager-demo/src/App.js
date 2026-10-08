@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import './App.css';
 import AuthenticationPanel from './components/AuthenticationPanel';
 import AddFoodsWidget from './components/AddFoodsWidget';

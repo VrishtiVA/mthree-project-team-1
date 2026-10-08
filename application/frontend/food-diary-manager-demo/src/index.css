@@ -22,6 +22,8 @@ code {
 
     --bs-body-font-family: "Jost", sans-serif;
     --bs-heading-font-family: "Jost", sans-serif;
+    
+    --bs-border-radius: 8px;
 }
 
 .btn-primary {
