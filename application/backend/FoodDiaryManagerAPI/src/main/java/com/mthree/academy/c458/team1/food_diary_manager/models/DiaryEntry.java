@@ -1,20 +1,34 @@
 package com.mthree.academy.c458.team1.food_diary_manager.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
 public class DiaryEntry {
 
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "diary_entry_id", nullable = false)
 	private int diaryEntryId;
 
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "client_id", nullable = false)
-	private User client;
+	@JoinColumn(name = "diary_day_id", nullable = false)
+	@JsonIgnore
+	private DiaryDay day;
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "food_id", nullable = false)
+	@JsonIgnore
+	private Food food;
+
+	@JsonProperty("name")
+	public String getFoodName() {
+		return food != null ? food.getName() : null;
+	}
+
 
 	private double calories;
 	private double protein;
@@ -23,42 +37,34 @@ public class DiaryEntry {
 	private double sugars;
 	private double fibre;
 	private double salt;
-	private int amount;
+
+	@Column(name = "amount", nullable = true)
+	private Integer amount;
+
 	private LocalTime time;
-	private LocalDate date;
 
 	public DiaryEntry() {
 	}
 
-	public DiaryEntry(int diaryEntryId, User client, double calories, double protein, double carbohydrates, double fat,
-					  double fibre, double sugars, int amount, double salt, LocalDate date, LocalTime time, String name) {
-		this.diaryEntryId = diaryEntryId;
-		this.client = client;
-		this.calories = calories;
-		this.protein = protein;
-		this.carbohydrates = carbohydrates;
-		this.fat = fat;
-		this.fibre = fibre;
-		this.sugars = sugars;
-		this.amount = amount;
-		this.salt = salt;
-		this.date = date;
-		this.time = time;
-		this.name = name;
+	public int getDiaryEntryId() {
+		return diaryEntryId;
 	}
 
-	public String getName() {
-		return name;
+	public DiaryDay getDay() {
+		return day;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setDay(DiaryDay day) {
+		this.day = day;
 	}
 
-	private String name;
+	public Food getFood() {
+		return food;
+	}
 
-
-	public User getClient() {return client;}
+	public void setFood(Food food) {
+		this.food = food;
+	}
 
 	public double getCalories() {
 		return calories;
@@ -116,11 +122,11 @@ public class DiaryEntry {
 		this.salt = salt;
 	}
 
-	public int getAmount() {
+	public Integer getAmount() {
 		return amount;
 	}
 
-	public void setAmount(int amount) {
+	public void setAmount(Integer amount) {
 		this.amount = amount;
 	}
 
@@ -130,21 +136,5 @@ public class DiaryEntry {
 
 	public void setTime(LocalTime time) {
 		this.time = time;
-	}
-
-	public LocalDate getDate() {
-		return date;
-	}
-
-	public void setDate(LocalDate date) {
-		this.date = date;
-	}
-
-	public int getDiaryEntryId() {
-		return diaryEntryId;
-	}
-
-	public void setDiaryEntryId(int diaryEntryId) {
-		this.diaryEntryId = diaryEntryId;
 	}
 }
