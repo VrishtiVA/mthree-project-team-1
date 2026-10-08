@@ -2,7 +2,7 @@ import { useState } from "react";
 import BarcodeScanner from "./BarcodeScanner";
 import { apiAddToDiaryByBarcode, apiFindFoodByBarcode, apiFindFoodByName } from "../api/foodDiaryApi";
 
-export default function AddFoodsWidget() {
+export default function AddFoodsWidget({showNotification}) {
 
     const [lookupMode, setLookupMode] = useState("barcode");
     const [lookupValue, setLookupValue] = useState("");
@@ -47,6 +47,7 @@ export default function AddFoodsWidget() {
             //Set if got a successful response
             if (response) {
                 setFoodItem(response); 
+                showNotification("Successfully added food to diary", "success");
             } else {
                 throw Error();
             }

@@ -1,43 +1,56 @@
 import { apiSignIn, apiSignOut, apiSignUp } from "../api/authenticationApi"
 
-export default function AuthenticationPanel() {
+export default function AuthenticationPanel({showNotification}) {
     
     const signUpAsClient = async () => {
-        await apiSignUp(
+        let response = await apiSignUp(
             "exampleClient",
             "password",
             "client",
             "Client Fname",
             "Client Lname"
         );
+        if (response) {
+            showNotification("Signed up successfully", "success");
+        }
     }
 
     const signUpAsConsultant = async () => {
-        await apiSignUp(
+        let response = await apiSignUp(
             "exampleConsultant",
             "password",
             "consultant",
             "Consultant Fname",
             "Consultant Lname"
         );
+        if (response) {
+            showNotification("Signed up successfully", "success");
+        }
     }
 
     const signInAsClient = async () => {
-        await apiSignIn(
+        let response = await apiSignIn(
             "exampleClient",
             "password"
         );
+        if (response) {
+            showNotification("Signed in successfully", "success");
+        }
     }
 
     const signInAsConsultant = async () => {
-        await apiSignIn(
+        let response = await apiSignIn(
             "exampleConsultant",
             "password"
         );
+        if (response) {
+            showNotification("Signed in successfully", "success");
+        }
     }
 
     const signOut = async () => {
         await apiSignOut();
+        showNotification("Signed out successfully", "success");
     }
 
     return (
