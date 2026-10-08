@@ -1,12 +1,13 @@
 import { useState } from "react";
 import BarcodeScanner from "./BarcodeScanner";
-import { apiFindFoodByBarcode, apiFindFoodByName } from "../api/foodDiaryApi";
+import { apiAddToDiaryByBarcode, apiFindFoodByBarcode, apiFindFoodByName } from "../api/foodDiaryApi";
 
 export default function AddFoodsWidget() {
 
     const [lookupMode, setLookupMode] = useState("barcode");
     const [lookupValue, setLookupValue] = useState("");
     const [foodItem, setFoodItem] = useState(null);
+    const [amountValue, setAmountValue] = useState(null);
     const [dateTimeValue, setDateTimeValue] = useState(null);
 
     const goLookupItem = async () => {
@@ -23,7 +24,30 @@ export default function AddFoodsWidget() {
             //Set if got a successful response
             if (response) 
                 setFoodItem(response);
-            else {
+            else throw Error();
+
+        } catch (error) {
+            setFoodItem(null);
+        }
+    }
+
+    const addToDiaryByBarcode = async () => {
+        try {
+            let response = null;
+            
+            let datetime = dateTimeValue?.split("T") || null;
+            if (!datetime) return;
+
+            let time = datetime[1] + ":00";
+            let date = datetime[0];
+            
+            //Try fetch food item
+            response = await apiAddToDiaryByBarcode(lookupValue, amountValue, time, date);
+            
+            //Set if got a successful response
+            if (response) {
+                setFoodItem(response); 
+            } else {
                 throw Error();
             }
 
@@ -73,22 +97,33 @@ export default function AddFoodsWidget() {
                             Lookup
                         </button>
 
-                        <hr className="my-1"/>
+                        {lookupMode === "barcode" && <>
+                            <hr className="my-1"/>
 
-                        <div className="input-group rounded-2 overflow-hidden">
-                            <input 
-                                className="form-control" 
-                                placeholder="Enter date and time"
-                                type="datetime-local"
-                                value={dateTimeValue}
-                                disabled={true}
-                                onInput={(e) => setDateTimeValue(e.target.value)}
-                            />
-                        </div>
+                            <div className="input-group rounded-2 overflow-hidden">
+                                <input 
+                                    className="form-control" 
+                                    placeholder="Enter amount in grams"
+                                    type="number"
+                                    value={amountValue}
+                                    onInput={(e) => setAmountValue(e.target.value)}
+                                />
+                            </div>
 
-                        <button className="btn btn-success" disabled={true} onClick={goLookupItem}>
-                            Add to Diary
-                        </button>
+                            <div className="input-group rounded-2 overflow-hidden">
+                                <input 
+                                    className="form-control" 
+                                    placeholder="Enter date and time"
+                                    type="datetime-local"
+                                    value={dateTimeValue}
+                                    onInput={(e) => setDateTimeValue(e.target.value)}
+                                />
+                            </div>
+
+                            <button className="btn btn-success" onClick={addToDiaryByBarcode}>
+                                Add to Diary
+                            </button>
+                        </>}
                     </div>
                 </div>
 
