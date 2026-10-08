@@ -7,6 +7,7 @@ export default function AddFoodsWidget() {
     const [lookupMode, setLookupMode] = useState("barcode");
     const [lookupValue, setLookupValue] = useState("");
     const [foodItem, setFoodItem] = useState(null);
+    const [dateTimeValue, setDateTimeValue] = useState(null);
 
     const goLookupItem = async () => {
         try {
@@ -20,7 +21,11 @@ export default function AddFoodsWidget() {
             }
             
             //Set if got a successful response
-            setFoodItem(response);
+            if (response) 
+                setFoodItem(response);
+            else {
+                throw Error();
+            }
 
         } catch (error) {
             setFoodItem(null);
@@ -47,7 +52,7 @@ export default function AddFoodsWidget() {
                             />}
                         </div>
 
-                        <div className="mb-3">
+                        <div>
                             <select className="form-select" onChange={(e) => setLookupMode(e.target.value)}>
                                 <option 
                                     value="barcode" 
@@ -67,6 +72,19 @@ export default function AddFoodsWidget() {
                         <button className="btn btn-success" onClick={goLookupItem}>
                             Lookup
                         </button>
+
+                        <hr className="my-1"/>
+
+                        <div className="input-group rounded-2 overflow-hidden">
+                            <input 
+                                className="form-control" 
+                                placeholder="Enter date and time"
+                                type="datetime-local"
+                                value={dateTimeValue}
+                                disabled={true}
+                                onInput={(e) => setDateTimeValue(e.target.value)}
+                            />
+                        </div>
 
                         <button className="btn btn-success" disabled={true} onClick={goLookupItem}>
                             Add to Diary
