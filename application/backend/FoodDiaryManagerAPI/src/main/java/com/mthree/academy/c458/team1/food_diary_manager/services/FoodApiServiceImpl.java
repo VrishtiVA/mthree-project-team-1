@@ -38,17 +38,12 @@ public class FoodApiServiceImpl implements FoodApiService {
 	UserRepository userRepository;
 
 
-	public Food searchFoodByBarcode(String barcode) throws APIException {
+	public Food searchFoodByBarcode(String barcode) throws APIException, FoodNotFoundException {
 
 		Food food = foodRepository.findByBarcode(barcode);
-		if (food == null) {
-			try{
-				food = openFoodFactsAPI.searchFoodByBarcode(barcode);
 
-			} catch (FoodNotFoundException e) {
-				System.out.println(e.getMessage());
-				return null;
-			}
+		if (food == null) {
+			food = openFoodFactsAPI.searchFoodByBarcode(barcode);
 			System.out.println("Saving Food to repository");
 			foodRepository.save(food);
 			return food;
@@ -151,18 +146,6 @@ public class FoodApiServiceImpl implements FoodApiService {
 		diaryDay.addEntry(diaryEntry);
 
 		// Save entry
-		System.out.println("========== DIARY ENTRY BEFORE SAVE ==========");
-		System.out.println("amount: " + diaryEntry.getAmount());
-		System.out.println("food: " + diaryEntry.getFood());
-		System.out.println("day: " + diaryEntry.getDay());
-		System.out.println("calories: " + diaryEntry.getCalories());
-		System.out.println("protein: " + diaryEntry.getProtein());
-		System.out.println("fat: " + diaryEntry.getFat());
-		System.out.println("carbohydrates: " + diaryEntry.getCarbohydrates());
-		System.out.println("sugars: " + diaryEntry.getSugars());
-		System.out.println("fibre: " + diaryEntry.getFibre());
-		System.out.println("salt: " + diaryEntry.getSalt());
-		System.out.println("============================================");
 		diaryEntryRepository.save(diaryEntry);
 
 		return diaryEntry;

@@ -162,10 +162,13 @@ public class FoodApiServiceImplTest {
 		when(openFoodFactsAPI.searchFoodByBarcode("999999"))
 				.thenThrow(new FoodNotFoundException("Food not found"));
 
-		Food result =
-				foodApiService.searchFoodByBarcode("999999");
 
-		assertNull(result);
+		// Checks that error is propagated to controller.
+		assertThrows(
+				FoodNotFoundException.class,
+				() -> foodApiService.searchFoodByBarcode("999999")
+		);
+
 
 		verify(foodRepository, never()).save(any());
 	}

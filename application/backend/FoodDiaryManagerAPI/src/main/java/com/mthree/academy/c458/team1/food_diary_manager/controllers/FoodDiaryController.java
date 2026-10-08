@@ -35,13 +35,16 @@ public class FoodDiaryController {
 		//
 		try {
 			Food food = foodApiService.searchFoodByBarcode(barcode);
-			if  (food != null) {
-				System.out.println(food.toString());
-			}
+//			if  (food != null) {
+//				System.out.println(food.toString());
+//			}
 			return new ResponseEntity<Food>(food, HttpStatus.OK);
 
 		} catch (APIException e) {
 			return new ResponseEntity<Error>(new Error(e.getMessage()), HttpStatus.SERVICE_UNAVAILABLE);
+		}
+		catch (FoodNotFoundException e) {
+			return new ResponseEntity<Error>(new Error(e.getMessage()), HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -55,13 +58,11 @@ public class FoodDiaryController {
 		try {
 			Food food;
 			String barcode = foodApiService.getBarcodeUsingName(foodName);
-			System.out.println(barcode);
 			food = foodApiService.searchFoodByBarcode(barcode);
 			return new ResponseEntity<Food>(food, HttpStatus.OK);
 
 		}
 		catch (FoodNotFoundException | APIException e) {
-			System.out.println(e.getMessage());
 			return new ResponseEntity<Error>(new Error(e.getMessage()), HttpStatus.SERVICE_UNAVAILABLE);
 
 

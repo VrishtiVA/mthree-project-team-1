@@ -16,7 +16,7 @@ import java.util.List;
 public interface FoodApiService {
 
 
-	Food searchFoodByBarcode(String foodBarcode) throws APIException;
+	Food searchFoodByBarcode(String foodBarcode) throws APIException, FoodNotFoundException;
 
 	String getBarcodeUsingName(String foodName) throws FoodNotFoundException, APIException;
 
