@@ -52,12 +52,12 @@ export default function FoodDiaryWidget({showNotification}) {
                                             <li className="list-group-item">Name: {entry.name}</li>
                                             <li className="list-group-item">Amount: {entry.amount}g</li>
                                             <li className="list-group-item">Calories: {entry.calories}kcal</li>
-                                            <li className="list-group-item">Carboyhrates: {entry.carbohydrates}g</li>
-                                            <li className="list-group-item">Fat: {entry.fat}g</li>
-                                            <li className="list-group-item">Protein: {entry.protein}g</li>
-                                            <li className="list-group-item">Sugars: {entry.sugars}g</li>
-                                            <li className="list-group-item">Salt: {entry.salt}g</li>
-                                            <li className="list-group-item">Fibre: {entry.fibre}g</li>
+                                            <li className="list-group-item">Carboyhrates: {Math.round(entry.carbohydrates * 100)/100}g</li>
+                                            <li className="list-group-item">Fat: {Math.round(entry.fat * 100)/100}g</li>
+                                            <li className="list-group-item">Protein: {Math.round(entry.protein * 100)/100}g</li>
+                                            <li className="list-group-item">Sugars: {Math.round(entry.sugars * 100)/100}g</li>
+                                            <li className="list-group-item">Salt: {Math.round(entry.salt * 100)/100}g</li>
+                                            <li className="list-group-item">Fibre: {Math.round(entry.fibre * 100)/100}g</li>
                                         </ul>
                                     </div>
                                 )}

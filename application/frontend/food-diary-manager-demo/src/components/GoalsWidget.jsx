@@ -10,8 +10,7 @@ export default function GoalsWidget({showNotification}) {
     const [maximumValue, setMaximumValue] = useState("");
     const [goalMode, setGoalMode] = useState("addGoal");
     const [goalIdValue, setGoalIdValue] = useState("");
-
-    const clientIdValue = 1; //For demo, client will be created first to have ID 1.
+    const [clientIdValue, SetClientIdValue] = useState("");
 
     const addClientGoal = async () => {
         try {
@@ -88,6 +87,14 @@ export default function GoalsWidget({showNotification}) {
                                 {/* <option value="getGoals"> Get Goals </option> */}
                             </select>
                             
+                            <input 
+                                className="form-control" 
+                                placeholder="Enter Client ID"
+                                type="number"
+                                value={clientIdValue}
+                                onInput={(e) => SetClientIdValue(e.target.value)}
+                            />
+
                             {goalMode !== "addGoal" && goalMode !== "getGoals" && 
                                 <input 
                                     className="form-control" 

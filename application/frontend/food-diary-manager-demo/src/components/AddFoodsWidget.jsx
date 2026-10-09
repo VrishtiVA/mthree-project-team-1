@@ -4,7 +4,7 @@ import { apiAddToDiaryByBarcode, apiDeleteDiaryEntry, apiFindFoodByBarcode, apiF
 
 export default function AddFoodsWidget({showNotification}) {
 
-    const [lookupMode, setLookupMode] = useState("barcode");
+    const [lookupMode, setLookupMode] = useState("name");
     const [lookupValue, setLookupValue] = useState("");
     const [foodItem, setFoodItem] = useState(null);
     const [amountValue, setAmountValue] = useState(null);
@@ -46,7 +46,7 @@ export default function AddFoodsWidget({showNotification}) {
             
             //Set if got a successful response
             if (response) {
-                setFoodItem(response); 
+                // setFoodItem(response); 
                 showNotification("Successfully added food to diary", "success");
             } else throw Error();
 
@@ -95,7 +95,6 @@ export default function AddFoodsWidget({showNotification}) {
                         <div>
                             <select 
                                 className="form-select"
-                                defaultValue={"barcode"}
                                 value={lookupMode}
                                 onChange={(e) => setLookupMode(e.target.value)}
                             >
