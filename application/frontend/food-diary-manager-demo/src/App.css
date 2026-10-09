@@ -1,0 +1,39 @@
+
+/* ----- Scanner Styling ----- */
+
+#scannerContainer {
+    position: fixed;
+    z-index: 10;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#scannerContainer #reader {
+    margin-inline: auto;
+    margin-block: 48px;
+    border-radius: 16px;
+    max-width: 600px;
+    overflow: hidden;
+}
+
+#scannerContainer #stopScanner {
+    position: absolute;
+    display: flex;
+    justify-self: center;
+    z-index: 11;
+    margin-block: 52px;
+}
+
+/* ----- App Styling ----- */
+
+.container-slim {
+    margin-inline: 15%;
+}
+
+card {
+    border-radius: 200px;
+}
+
+/* .card-body {
+    padding: 16px;
+} */
