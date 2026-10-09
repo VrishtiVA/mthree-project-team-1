@@ -93,9 +93,14 @@ export default function AddFoodsWidget({showNotification}) {
                     <div className="card-body py-4 d-flex flex-column gap-2">
                         
                         <div>
-                            <select className="form-select" defaultValue={"barcode"} onChange={(e) => setLookupMode(e.target.value)}>
-                                <option value="barcode"> By Barcode </option>
-                                <option value="name"> By Search </option>
+                            <select 
+                                className="form-select"
+                                defaultValue={"barcode"}
+                                value={lookupMode}
+                                onChange={(e) => setLookupMode(e.target.value)}
+                            >
+                                <option value="barcode"> Barcode </option>
+                                <option value="name"> Search </option>
                             </select>
                         </div>
 
@@ -111,15 +116,22 @@ export default function AddFoodsWidget({showNotification}) {
                             />}
                         </div>
 
-                        <button className="btn btn-success" onClick={goLookupItem}>
-                            Lookup
-                        </button>
+                        <div className="d-flex align-self-center mt-2">
+                            <button className="btn btn-success" onClick={goLookupItem}>
+                                Lookup
+                            </button>
+                        </div>
 
                         {lookupMode === "barcode" && <>
-                            <hr className="my-1"/>
+                            {/* <hr className="my-1"/> */}
 
-                            <div className="input-group">
-                                <select className="form-select" defaultValue={"getEntries"} onChange={(e) => setDiaryMode(e.target.value)}>
+                            <div className="input-group mt-2">
+                                <select 
+                                    className="form-select" 
+                                    defaultValue={"addEntry"}
+                                    value={diaryMode}
+                                    onChange={(e) => setDiaryMode(e.target.value)}
+                                >
                                     <option value="addEntry"> Add Entry </option>
                                     <option value="updateEntry"> Update Entry </option>
                                     <option value="deleteEntry"> Delete Entry </option>
@@ -158,21 +170,23 @@ export default function AddFoodsWidget({showNotification}) {
                                 </div>
                             </>}
 
-                            {diaryMode === "addEntry" &&
-                                <button className="btn btn-success" onClick={addToDiaryByBarcode}>
-                                    Add to Diary
-                                </button>
-                            }
-                            {diaryMode === "updateEntry" &&
-                                <button className="btn btn-success" onClick={updateDiaryEntry}>
-                                    Update Diary Entry
-                                </button>
-                            }
-                            {diaryMode === "deleteEntry" &&
-                                <button className="btn btn-danger" onClick={deleteDiaryEntry}>
-                                    Delete Diary Entry
-                                </button>
-                            }
+                            <div className="d-flex align-self-center mt-2">
+                                {diaryMode === "addEntry" &&
+                                    <button className="btn btn-success" onClick={addToDiaryByBarcode}>
+                                        Add to Diary
+                                    </button>
+                                }
+                                {diaryMode === "updateEntry" &&
+                                    <button className="btn btn-success" onClick={updateDiaryEntry}>
+                                        Update Diary Entry
+                                    </button>
+                                }
+                                {diaryMode === "deleteEntry" &&
+                                    <button className="btn btn-danger" onClick={deleteDiaryEntry}>
+                                        Delete Diary Entry
+                                    </button>
+                                }
+                            </div>
                         </>}
                     </div>
                 </div>

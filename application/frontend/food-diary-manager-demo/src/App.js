@@ -5,6 +5,7 @@ import AppHeader from './components/AppHeader';
 import { useState } from 'react';
 import Notification from './components/Notification';
 import FoodDiaryWidget from './components/FoodDiaryWidget';
+import GoalsWidget from './components/GoalsWidget';
 
 function App() {
 
@@ -27,8 +28,8 @@ function App() {
 
       <AuthenticationPanel showNotification={showNotification} />
       <AddFoodsWidget showNotification={showNotification} />
-      {/* <GoalsWidget showNotification={showNotification} /> */}
       <FoodDiaryWidget showNotification={showNotification} />
+      <GoalsWidget showNotification={showNotification} />
     </div>
   </>);
 }

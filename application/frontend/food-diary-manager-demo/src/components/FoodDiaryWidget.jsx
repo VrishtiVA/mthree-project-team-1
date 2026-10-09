@@ -63,7 +63,7 @@ export default function FoodDiaryWidget({showNotification}) {
                                 )}
                             </div>
                         }
-
+                        
                     </div>
                 </div>
             </div>
