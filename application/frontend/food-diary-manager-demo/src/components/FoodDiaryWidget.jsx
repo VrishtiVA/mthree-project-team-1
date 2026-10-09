@@ -21,8 +21,8 @@ export default function FoodDiaryWidget({showNotification}) {
     }
 
     return (
-        <div>
-            <h3 className="mb-4 text-center">Food Diary</h3>
+        <div className="grid">
+            <h3 className="mb-4 text-center">View Food Diary</h3>
             
             <div className="row mx-auto gap-4">
                 <div className="card col-md">
@@ -46,9 +46,9 @@ export default function FoodDiaryWidget({showNotification}) {
                                 {diaryEntries?.map((entry, i) => 
                                     <div className="card" key={"diary-entry-"+i}>
                                         <div className="card-header">
-                                            <li className="list-group-item fs-6">Entry ID: {entry.diaryEntryId}</li>
+                                            <li className="list-group-item">Entry ID: {entry.diaryEntryId}</li>
                                         </div>
-                                        <ul className="list-group list-group-flush small fs-6">
+                                        <ul className="list-group list-group-flush">
                                             <li className="list-group-item">Name: {entry.name}</li>
                                             <li className="list-group-item">Amount: {entry.amount}g</li>
                                             <li className="list-group-item">Calories: {entry.calories}kcal</li>
@@ -63,7 +63,7 @@ export default function FoodDiaryWidget({showNotification}) {
                                 )}
                             </div>
                         }
-                        
+
                     </div>
                 </div>
             </div>

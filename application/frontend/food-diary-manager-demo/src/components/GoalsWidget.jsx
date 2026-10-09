@@ -66,7 +66,7 @@ export default function GoalsWidget({showNotification}) {
     }
 
     return (<div className="grid">
-        <h3 className="mb-4 text-center">Client Goals</h3>
+        <h3 className="mb-4 text-center">Client Goals Management</h3>
         
         <div className="row mx-auto gap-4">
             <div className="card col-md">
@@ -104,7 +104,7 @@ export default function GoalsWidget({showNotification}) {
                             }
                         </div>
 
-                        {goalMode != "deleteGoal" && goalMode !== "getGoals" && <>
+                        {goalMode !== "deleteGoal" && goalMode !== "getGoals" && <>
                             <div className="form-field">
                                 <label className="form-label">Goal Focus</label>
                                 <select 
@@ -181,29 +181,6 @@ export default function GoalsWidget({showNotification}) {
                             </button>
                         }
                     </div>
-
-                    {/* {diaryEntries?.length > 0 && 
-                        <div className="d-flex flex-column gap-3 mt-3">
-                            {diaryEntries?.map((entry, i) => 
-                                <div className="card" key={"diary-entry-"+i}>
-                                    <div className="card-header">
-                                        <li className="list-group-item fs-6">Entry ID: {entry.diaryEntryId}</li>
-                                    </div>
-                                    <ul className="list-group list-group-flush small fs-6">
-                                        <li className="list-group-item">Name: {entry.name}</li>
-                                        <li className="list-group-item">Amount: {entry.amount}g</li>
-                                        <li className="list-group-item">Calories: {entry.calories}kcal</li>
-                                        <li className="list-group-item">Carboyhrates: {entry.carbohydrates}g</li>
-                                        <li className="list-group-item">Fat: {entry.fat}g</li>
-                                        <li className="list-group-item">Protein: {entry.protein}g</li>
-                                        <li className="list-group-item">Sugars: {entry.sugars}g</li>
-                                        <li className="list-group-item">Salt: {entry.salt}g</li>
-                                        <li className="list-group-item">Fibre: {entry.fibre}g</li>
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                    } */}
                     
                 </div>
             </div>

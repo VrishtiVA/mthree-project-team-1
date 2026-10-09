@@ -2,7 +2,7 @@ import './App.css';
 import AuthenticationPanel from './components/AuthenticationPanel';
 import AddFoodsWidget from './components/AddFoodsWidget';
 import AppHeader from './components/AppHeader';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Notification from './components/Notification';
 import FoodDiaryWidget from './components/FoodDiaryWidget';
 import GoalsWidget from './components/GoalsWidget';
@@ -10,6 +10,7 @@ import GoalsWidget from './components/GoalsWidget';
 function App() {
 
   const [notification, setNotification] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
   function showNotification(message, type) {
     setNotification({message, type});
@@ -23,10 +24,21 @@ function App() {
   return (<>
     <Notification notification={notification}/>
 
-    <div className="container-slim my-5 d-flex flex-column gap-4">
+    <div className="container-slim my-5 d-flex flex-column gap-5">
+      
+      {/* {currentUser != null &&
+        <div className='position-absolute d-flex gap-1 bg-info py-1 px-2 rounded-2'>
+          <i className="bi bi-person-fill"></i>
+          {currentUser}
+        </div>
+      } */}
       <AppHeader />
 
-      <AuthenticationPanel showNotification={showNotification} />
+      <AuthenticationPanel 
+        setCurrentUser={setCurrentUser} 
+        showNotification={showNotification} 
+      />
+
       <AddFoodsWidget showNotification={showNotification} />
       <FoodDiaryWidget showNotification={showNotification} />
       <GoalsWidget showNotification={showNotification} />

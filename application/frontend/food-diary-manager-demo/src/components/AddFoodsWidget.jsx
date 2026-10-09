@@ -86,7 +86,7 @@ export default function AddFoodsWidget({showNotification}) {
 
     return (<>
         <div className="grid">
-            <h3 className="mb-4 text-center">Food Lookup</h3>
+            <h3 className="mb-4 text-center">Food Lookup & Diary Management</h3>
 
             <div className="row mx-auto gap-4">
                 <div className="card col-md">
