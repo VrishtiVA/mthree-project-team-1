@@ -31,9 +31,9 @@
 }
 
 card {
-    border-radius: 200px;
+    border-radius: 2px;
 }
 
-/* .card-body {
+.card-body {
     padding: 16px;
-} */
+}
