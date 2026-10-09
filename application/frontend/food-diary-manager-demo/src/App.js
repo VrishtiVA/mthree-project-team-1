@@ -24,7 +24,7 @@ function App() {
   return (<>
     <Notification notification={notification}/>
 
-    <div className="container-slim my-5 d-flex flex-column gap-5">
+    <div className="container-slim my-5 d-flex flex-column" style={{gap: "5rem"}}>
       
       {/* {currentUser != null &&
         <div className='position-absolute d-flex gap-1 bg-info py-1 px-2 rounded-2'>

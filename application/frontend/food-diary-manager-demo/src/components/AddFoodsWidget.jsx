@@ -99,8 +99,8 @@ export default function AddFoodsWidget({showNotification}) {
                                 value={lookupMode}
                                 onChange={(e) => setLookupMode(e.target.value)}
                             >
-                                <option value="barcode"> Barcode </option>
-                                <option value="name"> Search </option>
+                                <option value="barcode"> Lookup by Barcode </option>
+                                <option value="name"> Search by Name </option>
                             </select>
                         </div>
 

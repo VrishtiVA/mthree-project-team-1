@@ -16,6 +16,7 @@ code {
 
 
 :root {
+
     --bs-primary: rgb(248, 155, 24);
     --bs-primary-rgb: 248, 155, 24;
     --bs-border-color: rgb(234, 231, 229);
@@ -38,7 +39,7 @@ code {
 }
 
 body {
-  height: 100vh;
-  margin-bottom: 96px;
-  background-image: linear-gradient(#fefbf8 10%, #ffffff);
+  height: max-content;
+  margin-block: 96px;
+  background-image: linear-gradient(#fefbf8 20%, #ffffff);
 }

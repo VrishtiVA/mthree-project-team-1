@@ -105,20 +105,24 @@ export default function AuthenticationPanel({setCurrentUser, showNotification}) 
                 <div className="card col-md">
                     <div className="card-body py-4 d-flex flex-column gap-1 flex-wrap items-center">
                         
-                        <select 
-                            className="form-select mb-3" 
-                            defaultValue={1}
-                            value={viewMode}
-                            onChange={(e) => setViewMode(e.target.value)}
-                        >
-                            <option value={1}> Example Client </option>
-                            <option value={2}> Example Consultant </option>
-                            <option value={3}> Consultant Clients </option>
-                        </select>
+                        <div className="input-group mb-3">
+                            <select 
+                                className="form-select" 
+                                value={viewMode}
+                                onChange={(e) => setViewMode(Number(e.target.value))}
+                            >
+                                <option value={1}> Example Client </option>
+                                <option value={2}> Example Consultant </option>
+                                <option value={3}> Consultant Clients </option>
+                            </select>
+                            
+                            <button onClick={signOut} className="btn btn-primary">
+                                Sign Out
+                            </button>
+                        </div>
                         
-                        <div className="form-field">
-                            <label>Example Client</label>
-                            <div className="input-group">
+                        {viewMode === 1 && <>
+                            <div className={`d-flex ${users.length > 0 ? "flex-column" : "justify-content-center"} gap-2`}>
                                 <button onClick={signUpAsClient} className="btn btn-primary">
                                     Sign Up
                                 </button>
@@ -129,11 +133,10 @@ export default function AuthenticationPanel({setCurrentUser, showNotification}) 
                                     View
                                 </button>
                             </div>
-                        </div>
+                        </>}
 
-                        <div className="form-field">
-                            <label>Example Consultant</label>
-                            <div className="input-group">
+                        {viewMode === 2 && <>
+                            <div className={`d-flex ${users.length > 0 ? "flex-column" : "justify-content-center"} gap-2`}>
                                 <button onClick={signUpAsConsultant} className="btn btn-primary">
                                     Sign Up
                                 </button>
@@ -144,26 +147,21 @@ export default function AuthenticationPanel({setCurrentUser, showNotification}) 
                                     View
                                 </button>
                             </div>
-                        </div>
+                        </>}
 
-                        <div className="form-field">
-                            <label>Consultant Clients</label>
-                            <div className="d-flex flex-column gap-1">
-                                <button onClick={addConsultantClient} className="btn btn-primary">
+                        {viewMode === 3 && <>
+                            <div className={`d-flex ${users.length > 0 ? "flex-column" : "justify-content-center"} gap-2`}>
+                                <button onClick={addConsultantClient} className="btn btn-success">
                                     Add Consultant Client
                                 </button>
                                 <button onClick={getConsultantClients} className="btn btn-primary">
                                     Get Consultant Clients
                                 </button>
-                                <button onClick={removeConsultantClient} className="btn btn-primary">
+                                <button onClick={removeConsultantClient} className="btn btn-danger">
                                     Remove Consultant Client
                                 </button>
                             </div>
-                        </div>
-
-                        <button onClick={signOut} className="btn btn-primary">
-                            Sign Out
-                        </button>
+                        </>}
                         
                     </div>
                 </div>
